@@ -1,4 +1,3 @@
-```javascript
 // Инициализация Telegram Web App
 Telegram.WebApp.ready();
 const user = Telegram.WebApp.initDataUnsafe.user;
@@ -316,4 +315,3 @@ document.getElementById('profile-btn').addEventListener('click', showProfile);
 // Инициализация
 renderDoramas();
 Telegram.WebApp.expand();
-```
