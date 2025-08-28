@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дорамы Web App</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <header>
+        <div id="username"></div>
+        <button id="search-btn">Поиск</button>
+        <button id="profile-btn">Профиль</button>
+    </header>
+    <nav>
+        <button id="home-btn">Главная</button>
+        <div class="dropdown">
+            <button id="genres-btn">Жанры</button>
+            <div class="dropdown-content" id="genres-list">
+                <div>комедия</div><div>драма</div>
+                <div>криминал</div><div>мистика</div>
+                <div>приключения</div><div>школа</div>
+                <div>мини-дорамы</div>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button id="years-btn">Года</button>
+            <div class="dropdown-content" id="years-list">
+                <div>2025</div><div>2024</div>
+                <div>2023</div><div>2022</div>
+            </div>
+        </div>
+        <button id="top-btn">ТОП</button>
+    </nav>
+    <main>
+        <div id="dramas-list"></div>
+        <div id="pagination"></div>
+        <div id="drama-detail" style="display: none;">
+            <img id="detail-image" src="">
+            <h2 id="detail-name"></h2>
+            <p id="detail-description"></p>
+            <div id="player"></div>
+        </div>
+        <div id="profile" style="display: none;">
+            <h2>Избранное</h2>
+            <div id="favorites-list"></div>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
