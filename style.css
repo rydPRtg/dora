@@ -1,3 +1,4 @@
+```css
 /* Темная тема, легко менять цвета в переменных */
 :root {
     --bg-color: #1e1e1e;
@@ -127,18 +128,6 @@ button:hover {
     max-width: 300px;
 }
 
-.player {
-    margin-top: 20px;
-    background: #000;
-    height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-}
-/* ... предыдущие стили ... */
-
-/* Дополнения для плеера и серий */
 .episodes-list {
     display: flex;
     flex-wrap: wrap;
@@ -155,4 +144,7 @@ button:hover {
 #player {
     background: #000;
     margin-top: 10px;
+    width: 100%;
+    max-width: 800px;
 }
+```
