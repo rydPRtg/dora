@@ -136,3 +136,23 @@ button:hover {
     justify-content: center;
     color: #fff;
 }
+/* ... предыдущие стили ... */
+
+/* Дополнения для плеера и серий */
+.episodes-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.episode-btn {
+    margin: 5px;
+    background-color: var(--accent-color);
+    color: #fff;
+}
+
+#player {
+    background: #000;
+    margin-top: 10px;
+}
