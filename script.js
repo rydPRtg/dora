@@ -105,11 +105,19 @@ function showDramaDetail(drama) {
         Жанр: ${drama.genre}<br>
         Серии: ${drama.episodes}
     `;
-    document.getElementById('player').innerHTML = `
-        <video controls>
-            <source src="${drama.video_url}" type="video/mp4">
-        </video>
-    `;  // Плеер на основе pleayer.html (простой video tag, замените на ваш код из pleayer.html если нужно)
+    const player = document.getElementById('player');
+    if (drama.video_url.includes('kodik.online')) {
+        player.innerHTML = `
+            <iframe src="${drama.video_url}" width="100%" height="400" frameborder="0" allowfullscreen></iframe>
+        `;
+    } else {
+        player.innerHTML = `
+            <video controls width="100%">
+                <source src="${drama.video_url}" type="video/mp4">
+                Ваш браузер не поддерживает видео.
+            </video>
+        `;
+    }
 }
 
 document.getElementById('home-btn').addEventListener('click', () => {
@@ -121,16 +129,14 @@ document.getElementById('home-btn').addEventListener('click', () => {
     renderDramas();
 });
 
-// Фильтр по жанрам (при клике на жанр)
 document.querySelectorAll('#genres-list div').forEach(genre => {
     genre.addEventListener('click', () => {
-        const filtered = dramas.filter(d => d.genre === genre.textContent);
+        const filtered = dramas.filter(d => d.genre.includes(genre.textContent));
         currentPage = 1;
         renderDramas(filtered);
     });
 });
 
-// Фильтр по годам
 document.querySelectorAll('#years-list div').forEach(year => {
     year.addEventListener('click', () => {
         const filtered = dramas.filter(d => d.year === parseInt(year.textContent));
@@ -139,14 +145,12 @@ document.querySelectorAll('#years-list div').forEach(year => {
     });
 });
 
-// ТОП (пример: сортировка по году descending)
 document.getElementById('top-btn').addEventListener('click', () => {
     const sorted = [...dramas].sort((a, b) => b.year - a.year);
     currentPage = 1;
     renderDramas(sorted);
 });
 
-// Профиль
 document.getElementById('profile-btn').addEventListener('click', () => {
     document.getElementById('dramas-list').style.display = 'none';
     document.getElementById('pagination').style.display = 'none';
@@ -173,7 +177,6 @@ function renderProfile() {
     });
 }
 
-// Поиск (заглушка, пропишите логику)
 document.getElementById('search-btn').addEventListener('click', () => {
     alert('Логика поиска будет добавлена позже');
 });
