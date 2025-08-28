@@ -1,21 +1,22 @@
+```javascript
 // Инициализация Telegram Web App
 Telegram.WebApp.ready();
 const user = Telegram.WebApp.initDataUnsafe.user;
 document.getElementById('username').textContent = user ? `@${user.username}` : 'Гость';
 
-// Примерный список дорам (база данных в JS для простоты изменения, добавьте/измените объекты здесь)
+// Примерный список дорам (база данных в JS, легко добавлять/изменять)
 const doramas = [
     { 
         id: 1, 
         name: 'Дорама 1', 
         year: 2024, 
         genre: 'Комедия', 
-        episodesCount: 16,  // Общее количество серий (для отображения)
-        episodes: [  // Массив серий, легко добавляйте больше {number: N, url: '...'}
+        episodesCount: 16, 
+        episodes: [
             { number: 1, url: 'https://sicarus.cdn.cinemap.cc/861ddd8f4fef33526bebeceb4a0f2063:2025082900/tvseries/25bbe3f2dc3022f31cb426070fc765022c5897a0/480.mp4' }
         ], 
         image: 'https://via.placeholder.com/100x150?text=Dorama1', 
-        description: 'Описание дорамы 1. Жанр: Комедия, Год: 2024.' 
+        description: 'Описание дорамы 1. Жанр: Комедия, Год: 2024.'
     },
     { 
         id: 2, 
@@ -23,19 +24,25 @@ const doramas = [
         year: 2023, 
         genre: 'Драма', 
         episodesCount: 20, 
-        episodes: [],  // Добавьте серии аналогично
+        episodes: [], 
         image: 'https://via.placeholder.com/100x150?text=Dorama2', 
-        description: 'Описание дорамы 2. Жанр: Драма, Год: 2023.' 
+        description: 'Описание дорамы 2. Жанр: Драма, Год: 2023.'
     },
-    // Добавьте еще дорам, формат: { id: N, name: '...', year: N, genre: '...', episodesCount: N, episodes: [{number:1, url:'...'}, ...], image: 'url', description: '...' }
+    // Добавьте дорамы: { id: N, name: '...', year: N, genre: '...', episodesCount: N, episodes: [{number: N, url: '...'}, ...], image: 'url', description: '...' }
 ];
 
-// Пагинация: 10 на страницу
+// Пагинация
 let currentPage = 1;
 const itemsPerPage = 10;
-let filteredDoramas = [...doramas]; // Для фильтров
+let filteredDoramas = [...doramas];
 
-// Функция рендера списка дорам
+// Текущая дорама и эпизод для сохранения прогресса
+let currentDorama = null;
+let currentEpisode = null;
+let videoElement = null;
+let lastSavedTime = 0;
+
+// Рендер списка дорам
 function renderDoramas(page = 1) {
     const content = document.getElementById('main-content');
     content.innerHTML = '';
@@ -81,12 +88,8 @@ function renderPagination() {
 }
 
 // Показ деталей дорамы
-let currentEpisode = null;
-let lastSavedTime = 0;
-let videoElement = null;
-
 function showDoramaDetails(dorama) {
-    // Сохраняем, что открыли эту дораму
+    currentDorama = dorama;
     Telegram.WebApp.CloudStorage.setItem('last_opened_dorama', JSON.stringify(dorama.id));
 
     document.getElementById('main-content').classList.add('hidden');
@@ -111,16 +114,16 @@ function showDoramaDetails(dorama) {
 
     videoElement = document.getElementById('player');
 
-    // Загружаем первую серию по умолчанию
+    // Загружаем первую серию или последнюю просмотренную
     if (dorama.episodes.length > 0) {
         loadEpisode(dorama, dorama.episodes[0]);
     }
 
-    // Слушатели на кнопки серий
+    // Слушатели для кнопок серий
     document.querySelectorAll('.episode-btn').forEach(btn => {
         btn.addEventListener('click', () => {
+            saveProgress();
             const episode = dorama.episodes.find(ep => ep.number == btn.dataset.number);
-            saveProgress();  // Сохраняем прогресс текущей перед сменой
             loadEpisode(dorama, episode);
         });
     });
@@ -140,7 +143,7 @@ function showDoramaDetails(dorama) {
         }
     });
 
-    // Сохранение при скрытии вкладки (выход из бота)
+    // Сохранение при скрытии вкладки
     document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'hidden') {
             saveProgress();
@@ -148,12 +151,13 @@ function showDoramaDetails(dorama) {
     });
 
     document.getElementById('back-btn').addEventListener('click', () => {
-        saveProgress();  // Сохраняем перед выходом
+        saveProgress();
         details.classList.add('hidden');
         document.getElementById('main-content').classList.remove('hidden');
         document.getElementById('pagination').classList.remove('hidden');
         videoElement = null;
         currentEpisode = null;
+        currentDorama = null;
     });
 }
 
@@ -172,27 +176,11 @@ function loadEpisode(dorama, episode) {
             videoElement.currentTime = 0;
             lastSavedTime = 0;
         }
-        videoElement.play();  // Автозапуск, если нужно отключите
+        videoElement.play();
     });
 }
 
 // Сохранение прогресса
-function saveProgress() {
-    if (currentEpisode && videoElement) {
-        const progressKey = `progress_${currentEpisode.doramaId}_${currentEpisode.number}`;  // Ошибка: dorama.id, fix
-        wait, в loadEpisode добавить doramaId? Нет, dorama доступен.
-        // Исправить: В saveProgress использовать dorama.id, но dorama не в scope. Добавить global currentDorama.
-    }
-} wait, refactoring needed.
-
-// Лучше: Добавить currentDorama
-let currentDorama = null;
-
-function showDoramaDetails(dorama) {
-    currentDorama = dorama;
-    // ... остальное
-}
-
 function saveProgress() {
     if (currentDorama && currentEpisode && videoElement) {
         const progressKey = `progress_${currentDorama.id}_${currentEpisode.number}`;
@@ -200,7 +188,7 @@ function saveProgress() {
     }
 }
 
-// Избранное (без изменений)
+// Добавление в избранное
 function addToFavorites(id) {
     Telegram.WebApp.CloudStorage.getItem('favorites', (err, value) => {
         let favorites = value ? JSON.parse(value) : [];
@@ -215,30 +203,57 @@ function addToFavorites(id) {
     });
 }
 
-// Показ профиля с избранным и просмотренным (добавил placeholder для просмотренного)
+// Показ профиля
 function showProfile() {
     document.getElementById('main-content').classList.add('hidden');
     document.getElementById('pagination').classList.add('hidden');
     const profile = document.getElementById('profile-content');
-    profile.innerHTML = '<h2>Избранное</h2>';
+    profile.innerHTML = '<h2>Избранное</h2><div id="favorites-list"></div><h2>Просмотренное</h2><div id="watched-list"></div>';
+
+    // Избранное
     Telegram.WebApp.CloudStorage.getItem('favorites', (err, value) => {
+        const favoritesList = document.getElementById('favorites-list');
         let favorites = value ? JSON.parse(value) : [];
-        favorites.forEach(id => {
-            const dorama = doramas.find(d => d.id === id);
-            if (dorama) {
-                const item = document.createElement('div');
-                item.textContent = dorama.name;
-                profile.appendChild(item);
-            }
+        if (favorites.length === 0) {
+            favoritesList.innerHTML = '<p>Пусто</p>';
+        } else {
+            favorites.forEach(id => {
+                const dorama = doramas.find(d => d.id === id);
+                if (dorama) {
+                    const item = document.createElement('div');
+                    item.textContent = dorama.name;
+                    favoritesList.appendChild(item);
+                }
+            });
+        }
+    });
+
+    // Просмотренное
+    const watchedList = document.getElementById('watched-list');
+    let watchedItems = [];
+    doramas.forEach(dorama => {
+        dorama.episodes.forEach(episode => {
+            const watchedKey = `watched_${dorama.id}_${episode.number}`;
+            Telegram.WebApp.CloudStorage.getItem(watchedKey, (err, value) => {
+                if (value && JSON.parse(value)) {
+                    watchedItems.push(`${dorama.name} - Серия ${episode.number}`);
+                    watchedList.innerHTML = watchedItems.length > 0 ? watchedItems.map(item => `<div>${item}</div>`).join('') : '<p>Пусто</p>';
+                }
+            });
         });
     });
-    // Placeholder для просмотренного: Добавьте логику перечисления watched_ keys если нужно
-    profile.innerHTML += '<h2>Просмотренное</h2><p>Логика будет добавлена (проверяйте watched_${id}_${num} в storage)</p>';
+
+    profile.innerHTML += '<button id="back-profile-btn">Назад</button>';
     profile.classList.remove('hidden');
-    // Добавьте кнопку назад аналогично details
+
+    document.getElementById('back-profile-btn').addEventListener('click', () => {
+        profile.classList.add('hidden');
+        document.getElementById('main-content').classList.remove('hidden');
+        document.getElementById('pagination').classList.remove('hidden');
+    });
 }
 
-// Кнопки меню (без изменений)
+// Кнопки меню
 document.getElementById('home-btn').addEventListener('click', () => {
     filteredDoramas = [...doramas];
     currentPage = 1;
@@ -257,7 +272,6 @@ document.getElementById('years-btn').addEventListener('click', () => {
 });
 
 document.getElementById('top-btn').addEventListener('click', () => {
-    // Placeholder для ТОП: сортировка по году descending
     filteredDoramas = [...doramas].sort((a, b) => b.year - a.year);
     currentPage = 1;
     renderDoramas();
@@ -291,15 +305,15 @@ function hideDropdowns() {
     document.getElementById('years-list').classList.add('hidden');
 }
 
-// Поиск и Профиль
+// Поиск
 document.getElementById('search-btn').addEventListener('click', () => {
     alert('Логика поиска будет добавлена позже');
 });
 
-document.getElementById('profile-btn').addEventListener('click', () => {
-    showProfile();
-});
+// Профиль
+document.getElementById('profile-btn').addEventListener('click', showProfile);
 
 // Инициализация
 renderDoramas();
-Telegram.WebApp.expand(); // Развернуть на весь экран
+Telegram.WebApp.expand();
+```
