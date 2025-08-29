@@ -146,3 +146,7 @@ button:hover {
     width: 100%;
     max-width: 800px;
 }
+
+#refresh-btn {
+    background-color: var(--accent-color);
+}
