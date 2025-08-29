@@ -3,22 +3,29 @@ Telegram.WebApp.ready();
 const user = Telegram.WebApp.initDataUnsafe.user;
 document.getElementById('username').textContent = user ? `@${user.username}` : 'Гость';
 
-// Базовый URL сервера (замените на ваш)
-const BASE_URL = 'http://your-server:5000'; // Например, http://your-server:5000
-const DORAMAS_URL = `${BASE_URL}/doramas.json?v=${Date.now()}`;
-const GENRES_URL = `${BASE_URL}/genres.json?v=${Date.now()}`;
+// Базовый URL сервера (замените на ваш сервер, где запущен bot.py)
+const BASE_URL = 'http://your-server:5000'; // Например, http://localhost:5000 для локального теста или URL Heroku
+
+// URL для JSON с параметром для обхода кэша
+function getDoramasUrl() {
+    return `${BASE_URL}/doramas.json?v=${Date.now()}`;
+}
+
+function getGenresUrl() {
+    return `${BASE_URL}/genres.json?v=${Date.now()}`;
+}
 
 // Загрузка жанров
 let genres = [];
 async function loadGenres() {
     try {
-        const response = await fetch(GENRES_URL);
+        const response = await fetch(getGenresUrl());
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         genres = await response.json();
         renderGenres();
     } catch (error) {
         console.error('Ошибка загрузки жанров:', error);
-        genres = ['Комедия', 'Драма', 'Криминал', 'Мистика', 'Приключения', 'Школа', 'Мини-дорамы'];
+        genres = ['Комедия', 'Драма', 'Криминал', 'Мистика', 'Приключения', 'Школа', 'Мини-дорамы']; // Дефолтные, если сервер недоступен
         renderGenres();
     }
 }
@@ -64,7 +71,7 @@ function renderGenres() {
 let doramas = [];
 async function loadDoramas() {
     try {
-        const response = await fetch(DORAMAS_URL);
+        const response = await fetch(getDoramasUrl());
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         doramas = await response.json();
         filteredDoramas = [...doramas];
@@ -338,6 +345,13 @@ document.getElementById('top-btn').addEventListener('click', () => {
     currentPage = 1;
     renderDoramas();
     hideDropdowns();
+});
+
+// Кнопка обновить
+document.getElementById('refresh-btn').addEventListener('click', () => {
+    loadGenres();
+    loadDoramas();
+    alert('Данные обновлены!');
 });
 
 // Фильтры годов
