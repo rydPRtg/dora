@@ -13,10 +13,13 @@ let genres = [];
 async function loadGenres() {
     try {
         const response = await fetch(GENRES_URL);
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         genres = await response.json();
         renderGenres();
     } catch (error) {
         console.error('Ошибка загрузки жанров:', error);
+        genres = ['Комедия', 'Драма', 'Криминал', 'Мистика', 'Приключения', 'Школа', 'Мини-дорамы'];
+        renderGenres();
     }
 }
 
@@ -62,6 +65,7 @@ let doramas = [];
 async function loadDoramas() {
     try {
         const response = await fetch(DORAMAS_URL);
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         doramas = await response.json();
         filteredDoramas = [...doramas];
         renderDoramas();
