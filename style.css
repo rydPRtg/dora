@@ -1,11 +1,10 @@
-/* Темная тема, легко менять цвета в переменных */
+/* Темная тема для оболочки */
 :root {
     --bg-color: #1e1e1e;
     --text-color: #ffffff;
     --accent-color: #4a90e2;
     --button-bg: #333333;
     --button-hover: #555555;
-    --dropdown-bg: #2a2a2a;
 }
 
 body {
@@ -28,7 +27,7 @@ header {
     background-color: var(--button-bg);
 }
 
-.header-left, .header-center, .header-right {
+.header-left, .header-right {
     font-size: 16px;
 }
 
@@ -45,108 +44,7 @@ button:hover {
     background-color: var(--button-hover);
 }
 
-.menu {
-    display: flex;
-    justify-content: space-around;
-    padding: 10px;
-    background-color: var(--button-bg);
-}
-
-.dropdown {
-    display: flex;
-    justify-content: center;
-    background-color: var(--dropdown-bg);
-    padding: 10px;
-    position: absolute;
-    width: 100%;
-    z-index: 10;
-}
-
-.dropdown.hidden {
-    display: none;
-}
-
-.column {
-    display: flex;
-    flex-direction: column;
-    margin: 0 20px;
-}
-
-.content {
-    padding: 10px;
+#content-container {
     flex-grow: 1;
-}
-
-.dorama-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    padding: 10px;
-    background-color: var(--button-bg);
-    border-radius: 5px;
-}
-
-.dorama-item img {
-    width: 100px;
-    height: auto;
-    margin-right: 10px;
-}
-
-.dorama-info {
-    flex-grow: 1;
-}
-
-.add-favorite {
-    background-color: var(--accent-color);
-    color: #fff;
-    padding: 5px 10px;
-    border: none;
-    cursor: pointer;
-}
-
-.pagination {
-    display: flex;
-    justify-content: center;
-    padding: 10px;
-}
-
-.pagination button {
-    margin: 0 5px;
-}
-
-.hidden {
-    display: none;
-}
-
-#dorama-details {
-    padding: 10px;
-}
-
-#dorama-details img {
-    width: 100%;
-    max-width: 300px;
-}
-
-.episodes-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-bottom: 10px;
-}
-
-.episode-btn {
-    margin: 5px;
-    background-color: var(--accent-color);
-    color: #fff;
-}
-
-#player {
-    background: #000;
-    margin-top: 10px;
-    width: 100%;
-    max-width: 800px;
-}
-
-#refresh-btn {
-    background-color: var(--accent-color);
+    overflow: auto;
 }
