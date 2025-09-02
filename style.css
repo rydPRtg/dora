@@ -1,328 +1,46 @@
-/* Темная тема, легко менять цвета в переменных */
-:root {
-    --bg-color: #1e1e1e;
-    --text-color: #ffffff;
-    --accent-color: #4a90e2;
-    --button-bg: #333333;
-    --button-hover: #555555;
-    --dropdown-bg: #2a2a2a;
-    --success-color: #28a745;
-    --danger-color: #dc3545;
-    --warning-color: #ffc107;
-}
-
-* {
-    box-sizing: border-box;
-}
-
 body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: auto;
-    line-height: 1.4;
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f0f0f0;
 }
 
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 16px;
-    background-color: var(--button-bg);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.header-left, .header-center, .header-right {
-    font-size: 16px;
-    font-weight: 500;
-}
-
-.header-left {
-    color: var(--accent-color);
-    min-width: 80px;
-}
-
-.header-center, .header-right {
-    min-width: 80px;
-}
-
-button {
-    background-color: var(--button-bg);
-    color: var(--text-color);
-    border: none;
-    padding: 10px 16px;
-    cursor: pointer;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.2s ease;
+h1 {
     text-align: center;
-    min-height: 40px;
 }
 
-button:hover {
-    background-color: var(--button-hover);
-    transform: translateY(-1px);
-}
-
-button:active {
-    transform: translateY(0);
-}
-
-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.menu {
-    display: flex;
-    justify-content: space-around;
-    padding: 8px;
-    background-color: var(--dropdown-bg);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-.menu button {
-    flex: 1;
-    margin: 0 4px;
-    padding: 8px 12px;
-    font-size: 13px;
-}
-
-.dropdown {
-    display: flex;
-    justify-content: center;
-    background-color: var(--dropdown-bg);
-    padding: 12px;
-    position: absolute;
+select {
     width: 100%;
-    z-index: 50;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    animation: slideDown 0.2s ease;
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.dropdown.hidden {
-    display: none;
-}
-
-.column {
-    display: flex;
-    flex-direction: column;
-    margin: 0 12px;
-    gap: 8px;
-}
-
-.column button {
-    white-space: nowrap;
-    padding: 8px 16px;
-    font-size: 13px;
-}
-
-.content {
-    padding: 16px;
-    flex-grow: 1;
-    min-height: 0;
-}
-
-.dorama-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 12px;
-    padding: 12px;
-    background-color: var(--button-bg);
-    border-radius: 8px;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.dorama-item:hover {
-    background-color: var(--button-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-.dorama-item img {
-    width: 80px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 6px;
-    margin-right: 12px;
-    flex-shrink: 0;
-}
-
-.dorama-info {
-    flex-grow: 1;
-    cursor: pointer;
-    padding-right: 12px;
-}
-
-.dorama-info h3 {
-    margin: 0 0 8px 0;
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--accent-color);
-}
-
-.dorama-info p {
-    margin: 4px 0;
-    font-size: 13px;
-    color: #bbb;
-    line-height: 1.3;
-}
-
-.add-favorite {
-    background-color: var(--accent-color);
-    color: white;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 600;
-    white-space: nowrap;
-    min-width: 90px;
-    transition: all 0.2s ease;
-}
-
-.add-favorite:hover {
-    background-color: #3a7bc8;
-}
-
-.add-favorite.favorited {
-    background-color: var(--success-color);
-}
-
-.add-favorite.favorited:hover {
-    background-color: #1e7e34;
-}
-
-.pagination {
-    display: flex;
-    justify-content: center;
-    padding: 16px;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.pagination button {
-    min-width: 40px;
-    padding: 8px 12px;
-    font-size: 14px;
-}
-
-.pagination button:disabled {
-    background-color: var(--accent-color);
-    color: white;
-}
-
-.hidden {
-    display: none !important;
-}
-
-.no-results {
-    text-align: center;
-    padding: 40px 20px;
-    color: #888;
-    font-size: 16px;
-}
-
-/* Детали дорамы */
-#dorama-details {
-    padding: 16px;
-    animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.dorama-header {
-    display: flex;
-    margin-bottom: 24px;
-    gap: 16px;
-}
-
-.dorama-header img {
-    width: 150px;
-    height: 225px;
-    object-fit: cover;
-    border-radius: 8px;
-    flex-shrink: 0;
-}
-
-.dorama-meta {
-    flex-grow: 1;
-}
-
-.dorama-meta h2 {
-    margin: 0 0 16px 0;
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--accent-color);
-}
-
-.dorama-meta p {
-    margin: 8px 0;
-    font-size: 14px;
-}
-
-.dorama-meta p strong {
-    color: var(--accent-color);
-    font-weight: 600;
-}
-
-.description {
-    color: #ccc;
-    line-height: 1.5;
-    margin-top: 12px !important;
-}
-
-.season-block {
+    padding: 10px;
     margin-bottom: 20px;
-    background-color: var(--dropdown-bg);
-    border-radius: 8px;
-    padding: 16px;
 }
 
-.season-block h4 {
-    margin: 0 0 12px 0;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--accent-color);
+ul {
+    list-style: none;
+    padding: 0;
 }
 
-.episodes-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 8px;
+li {
+    background: white;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    cursor: pointer;
 }
 
-.episode-btn {
-    background-color: var(--button-bg);
+#player-container {
+    margin-top: 20px;
+}
+
+#player {
+    max-width: 100%;
+}
+
+#back-btn {
+    display: block;
+    margin: 10px auto;
+    padding: 10px;
+    background: #007bff;
     color: white;
-    border: 2px solid transparent;
-    padding: 10px 8px;
-    font-size: 12px;
-    font-weight: 600;
-    transition: all 0.2s ease
+    border: none;
+    cursor: pointer;
+}
