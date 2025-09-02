@@ -1,7 +1,7 @@
 const seasons = [
     // Сезон 1
     [
-        { name: 'Серия 1', fileId: '1ZPhUEB7srhJDi-9XdCjOD0ZMGRNsCm0L' },  // Ваша первая серия
+        { name: 'Серия 1', fileId: '1ZPhUEB7srhJDi-9XdCjOD0ZMGRNsCm0L' }, // Ваша первая серия
         { name: 'Серия 2', fileId: 'YOUR_FILE_ID_1_2_HERE' },
         { name: 'Серия 3', fileId: 'YOUR_FILE_ID_1_3_HERE' }
     ],
@@ -25,10 +25,10 @@ const seasons = [
     ]
 ];
 
-const API_URL = 'https://your-server-url.com';  // Замените на URL вашего сервера (где bot.py запущен, например, https://your-app.herokuapp.com)
+const API_URL = 'https://your-server-url.com'; // Замените на URL вашего сервера (например, https://your-app.herokuapp.com)
 
 let currentEpisode = null;
-let video = document.getElementById('player');
+let player = document.getElementById('player');
 
 Telegram.WebApp.ready();
 
@@ -61,9 +61,8 @@ function loadEpisode(season, episodeIndex) {
     const ep = seasons[season][episodeIndex];
     currentEpisode = `season${season}-episode${episodeIndex}`;
     
-    const src = `https://drive.google.com/uc?export=download&id=${ep.fileId}`;
-    video.src = src;
-    video.type = 'video/mp4';
+    const src = `https://drive.google.com/file/d/${ep.fileId}/preview`;
+    player.src = src;
     
     // Получаем прогресс
     fetch(`${API_URL}/get_progress`, {
@@ -76,9 +75,14 @@ function loadEpisode(season, episodeIndex) {
     })
     .then(res => res.json())
     .then(data => {
-        video.currentTime = data.time || 0;
-        video.play();
-    });
+        console.log("Progress data:", data);
+        // Отправляем команду плееру Google Drive для установки времени
+        player.contentWindow.postMessage(
+            JSON.stringify({ event: 'listening', data: { time: data.time || 0 } }),
+            'https://drive.google.com'
+        );
+    })
+    .catch(err => console.error("Error fetching progress:", err));
     
     seasonSelect.style.display = 'none';
     episodeList.style.display = 'none';
@@ -86,19 +90,38 @@ function loadEpisode(season, episodeIndex) {
 }
 
 function saveProgress() {
-    if (!currentEpisode || video.paused) return;
+    if (!currentEpisode) return;
     
-    fetch(`${API_URL}/save_progress`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            init_data: Telegram.WebApp.initData,
-            episode: currentEpisode,
-            time: video.currentTime
-        })
-    });
+    // Запрашиваем текущее время у плеера
+    player.contentWindow.postMessage(
+        JSON.stringify({ event: 'listening', data: { getCurrentTime: true } }),
+        'https://drive.google.com'
+    );
 }
 
-// Сохраняем при паузе и перед закрытием
-video.addEventListener('pause', saveProgress);
+// Слушаем сообщения от плеера Google Drive
+window.addEventListener('message', (event) => {
+    if (event.origin !== 'https://drive.google.com') return;
+    
+    try {
+        const data = JSON.parse(event.data);
+        if (data.event === 'onStateChange' && data.info && data.info.currentTime) {
+            const currentTime = data.info.currentTime;
+            fetch(`${API_URL}/save_progress`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    init_data: Telegram.WebApp.initData,
+                    episode: currentEpisode,
+                    time: currentTime
+                })
+            })
+            .catch(err => console.error("Error saving progress:", err));
+        }
+    } catch (err) {
+        console.error("Error processing message:", err);
+    }
+});
+
+// Сохраняем прогресс перед закрытием
 window.addEventListener('beforeunload', saveProgress);
