@@ -2,8 +2,9 @@ const seasons = [
     // Сезон 1
     [
         { name: 'Серия 1', fileId: '1ZPhUEB7srhJDi-9XdCjOD0ZMGRNsCm0L' }, // Ваша первая серия
-        { name: 'Серия 2', fileId: 'YOUR_FILE_ID_1_2_HERE' },
-        { name: 'Серия 3', fileId: 'YOUR_FILE_ID_1_3_HERE' }
+        { name: 'Серия 2', fileId: '1cqS-s7gEiFtTX1otND_azkaPfCojvJM4' }, // Вторая серия
+        { name: 'Серия 3', fileId: '1RmnD4QCO2ZhRxckk6J77Tzp3lBhqr7JH' }, // Третья серия
+        { name: 'Серия 4', fileId: '1Nop2d49xWmtepQ38aAdv7a9VKOoVAEBo' }  // Четвертая серия
     ],
     // Сезон 2
     [
