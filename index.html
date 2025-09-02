@@ -3,75 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Дорамы App</title>
+    <title>MyShow</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-    <header>
-        <div id="username" class="header-left">Гость</div>
-        <button id="search-btn" class="header-center">🔍 Поиск</button>
-        <button id="profile-btn" class="header-right">👤 Профиль</button>
-    </header>
-    
-    <nav class="menu">
-        <button id="home-btn">🏠 Главная</button>
-        <button id="genres-btn">🎭 Жанры</button>
-        <button id="years-btn">📅 Года</button>
-        <button id="top-btn">⭐ ТОП</button>
-    </nav>
-    
-    <div id="genres-list" class="dropdown hidden">
-        <div class="column">
-            <!-- Жанры будут загружены динамически -->
-        </div>
-        <div class="column">
-            <!-- Вторая колонка жанров -->
-        </div>
+    <h1>MyShow</h1>
+    <select id="season-select">
+        <option value="">Выберите сезон</option>
+        <option value="0">Сезон 1</option>
+        <option value="1">Сезон 2</option>
+        <option value="2">Сезон 3</option>
+        <option value="3">Сезон 4</option>
+    </select>
+    <ul id="episode-list"></ul>
+    <div id="player-container" style="display: none;">
+        <video id="player" controls width="100%"></video>
+        <button id="back-btn">Назад к сериям</button>
     </div>
-    
-    <div id="years-list" class="dropdown hidden">
-        <div class="column">
-            <button onclick="filterByYear(2025)">2025</button>
-            <button onclick="filterByYear(2024)">2024</button>
-        </div>
-        <div class="column">
-            <button onclick="filterByYear(2023)">2023</button>
-            <button onclick="filterByYear(2022)">2022</button>
-        </div>
-    </div>
-    
-    <div id="main-content" class="content">
-        <div class="loading-container" style="text-align: center; padding: 40px;">
-            <div class="loading"></div>
-            <p style="margin-top: 16px;">Загрузка дорам...</p>
-        </div>
-    </div>
-    
-    <div id="pagination" class="pagination">
-        <!-- Кнопки пагинации -->
-    </div>
-    
-    <div id="dorama-details" class="hidden">
-        <!-- Детали дорамы -->
-    </div>
-    
-    <div id="profile-content" class="hidden">
-        <!-- Профиль пользователя -->
-    </div>
-    
-    <!-- Модальное окно поиска -->
-    <div id="search-overlay" class="search-overlay hidden">
-        <div class="search-modal">
-            <h3 style="margin-top: 0; color: var(--accent-color);">🔍 Поиск дорам</h3>
-            <input type="text" id="search-input" class="search-input" placeholder="Введите название дорамы, жанр или описание..." autocomplete="off">
-            <div class="search-buttons">
-                <button id="search-cancel" style="background-color: var(--button-bg);">Отмена</button>
-                <button id="search-execute" style="background-color: var(--accent-color); color: white;">Найти</button>
-            </div>
-        </div>
-    </div>
-
     <script src="script.js"></script>
 </body>
 </html>
