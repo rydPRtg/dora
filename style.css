@@ -1,17 +1,21 @@
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
-    background-color: #f0f0f0;
+    background-color: #000;
 }
 
 h1 {
     text-align: center;
+    color: white;
 }
 
 select {
     width: 100%;
     padding: 10px;
     margin-bottom: 20px;
+    background: #333;
+    color: white;
+    border: 1px solid #555;
 }
 
 ul {
@@ -20,19 +24,27 @@ ul {
 }
 
 li {
-    background: white;
+    background: #333;
     margin: 10px 0;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #555;
+    color: white;
     cursor: pointer;
 }
 
 #player-container {
     margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #player {
-    max-width: 100%;
+    width: 80%;
+    height: 80vh;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
 }
 
 #back-btn {
@@ -43,4 +55,5 @@ li {
     color: white;
     border: none;
     cursor: pointer;
+    border-radius: 5px;
 }
