@@ -1,6 +1,7 @@
 if (window.Telegram && window.Telegram.WebApp) {
     Telegram.WebApp.ready();
-    Telegram.WebApp.expand();
+    Telegram.WebApp.expand(); // Expand to full screen
+    Telegram.WebApp.setHeaderColor('#000000'); // Set header to black to match bottom bar
 }
 
 let currentSection = null;
@@ -62,3 +63,10 @@ function initSwipe() {
 }
 
 carousel.style.transform = `translateX(0px)`;
+
+// Ensure full-screen mode on load
+window.addEventListener('load', () => {
+    if (window.Telegram && window.Telegram.WebApp) {
+        Telegram.WebApp.expand();
+    }
+});
