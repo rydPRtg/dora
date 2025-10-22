@@ -1,8 +1,9 @@
 if (window.Telegram && window.Telegram.WebApp) {
     Telegram.WebApp.ready();
     Telegram.WebApp.expand();
-    Telegram.WebApp.requestFullscreen(); // Request full-screen mode
-    Telegram.WebApp.setHeaderColor('#000000'); // Set header to black to match bottom bar
+    Telegram.WebApp.requestFullscreen();
+    Telegram.WebApp.setHeaderColor('bg_color');
+    Telegram.WebApp.setBottomBarColor('bottom_bar_bg_color');
 }
 
 let currentSection = null;
@@ -21,12 +22,13 @@ function showSection(section) {
         document.getElementById('documents-section').style.display = 'block';
         initSwipe();
     } else {
-        alert(`Секція "${section}" відкрита. Функціонал буде додано пізніше.`);
+        Telegram.WebApp.showAlert(`Секція "${section}" відкрита. Функціонал буде додано пізніше.`);
     }
 }
 
 function flipCard(card) {
     card.classList.toggle('flipped');
+    Telegram.WebApp.HapticFeedback.impactOccurred('medium');
 }
 
 function initSwipe() {
@@ -50,8 +52,10 @@ function initSwipe() {
         if (Math.abs(currentX) > 50) {
             if (currentX < 0 && currentIndex < cards.length - 1) {
                 currentIndex++;
+                Telegram.WebApp.HapticFeedback.impactOccurred('light');
             } else if (currentX > 0 && currentIndex > 0) {
                 currentIndex--;
+                Telegram.WebApp.HapticFeedback.impactOccurred('light');
             }
         }
         carousel.style.transition = 'transform 0.3s ease';
@@ -65,11 +69,20 @@ function initSwipe() {
 
 carousel.style.transform = `translateX(0px)`;
 
-// Ensure full-screen mode on load
-window.addEventListener('load', () => {
-    if (window.Telegram && window.Telegram.WebApp) {
+// Handle fullscreen changes and errors
+if (window.Telegram && window.Telegram.WebApp) {
+    Telegram.WebApp.onEvent('fullscreenChanged', () => {
+        console.log('Fullscreen mode:', Telegram.WebApp.isFullscreen);
+    });
+
+    Telegram.WebApp.onEvent('fullscreenFailed', (error) => {
+        Telegram.WebApp.showAlert(`Не вдалося активувати повноекранний режим: ${error.error}`);
+    });
+
+    // Ensure full-screen mode on load
+    window.addEventListener('load', () => {
         Telegram.WebApp.ready();
         Telegram.WebApp.expand();
         Telegram.WebApp.requestFullscreen();
-    }
-});
+    });
+}
