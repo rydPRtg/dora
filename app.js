@@ -1,6 +1,7 @@
 if (window.Telegram && window.Telegram.WebApp) {
     Telegram.WebApp.ready();
-    Telegram.WebApp.expand(); // Expand to full screen
+    Telegram.WebApp.expand();
+    Telegram.WebApp.requestFullscreen(); // Request full-screen mode
     Telegram.WebApp.setHeaderColor('#000000'); // Set header to black to match bottom bar
 }
 
@@ -67,6 +68,8 @@ carousel.style.transform = `translateX(0px)`;
 // Ensure full-screen mode on load
 window.addEventListener('load', () => {
     if (window.Telegram && window.Telegram.WebApp) {
+        Telegram.WebApp.ready();
         Telegram.WebApp.expand();
+        Telegram.WebApp.requestFullscreen();
     }
 });
