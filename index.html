@@ -1,65 +1,34 @@
+<!-- index.html -->
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Telegram Mini App</title>
-    <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
-    <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>German Flashcards App</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
-    <div id="main-content">
-        <div id="documents-section" style="display: none;">
-            <div class="carousel" id="carousel">
-                <div class="card" onclick="flipCard(this)">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <div class="card-content">Карточка 1 (Передня сторона)</div>
-                        </div>
-                        <div class="card-back">
-                            <div class="card-content">Карточка 1 (Задня сторона)</div>
-                        </div>
-                    </div>
+    <div class="container">
+        <h1>German Flashcards</h1>
+        <input type="file" id="fileInput" accept=".xlsx">
+        <div id="cardContainer" class="hidden">
+            <div class="card" id="card">
+                <div class="card-front">
+                    <p id="germanWord"></p>
                 </div>
-                <div class="card" onclick="flipCard(this)">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <div class="card-content">Карточка 2 (Передня сторона)</div>
-                        </div>
-                        <div class="card-back">
-                            <div class="card-content">Карточка 2 (Задня сторона)</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card" onclick="flipCard(this)">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <div class="card-content">Карточка 3 (Передня сторона)</div>
-                        </div>
-                        <div class="card-back">
-                            <div class="card-content">Карточка 3 (Задня сторона)</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card" onclick="flipCard(this)">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <div class="card-content">Карточка 4 (Передня сторона)</div>
-                        </div>
-                        <div class="card-back">
-                            <div class="card-content">Карточка 4 (Задня сторона)</div>
-                        </div>
-                    </div>
+                <div class="card-back">
+                    <p id="russianTranslation"></p>
                 </div>
             </div>
+            <div class="controls">
+                <button id="prevBtn">Previous</button>
+                <button id="flipBtn">Flip</button>
+                <button id="nextBtn">Next</button>
+            </div>
+            <p id="progress">Card 1 of 0</p>
         </div>
     </div>
-    <div id="bottom-bar">
-        <button class="button" onclick="showSection('feed')">Стрічка</button>
-        <button class="button" onclick="showSection('documents')">Документи</button>
-        <button class="button" onclick="showSection('services')">Сервіси</button>
-        <button class="button" onclick="showSection('menu')">Меню</button>
-    </div>
-    <script src="app.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
