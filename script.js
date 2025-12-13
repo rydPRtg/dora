@@ -48,12 +48,11 @@ async function loadWords() {
             return;
         }
 
-        // После успешной загрузки показываем меню режимов
         loading.classList.add('hidden');
         modeSelection.classList.remove('hidden');
     } catch (error) {
         console.error(error);
-        alert('Не удалось загрузить words.xlsx. Проверьте, что файл лежит в корне репозитория и называется точно "words.xlsx".');
+        alert('Не удалось загрузить words.xlsx. Проверьте имя и расположение файла.');
         loading.classList.add('hidden');
     }
 }
@@ -83,7 +82,6 @@ function startMode(mode) {
     showQuestion();
 }
 
-// Остальные функции без изменений (showQuestion, setupChoices, checkInput и т.д.)
 function showQuestion() {
     if (currentIndex >= shuffledWords.length) {
         showStats();
@@ -95,6 +93,14 @@ function showQuestion() {
     nextBtn.classList.add('hidden');
     userInput.value = '';
 
+    // Сброс состояния кнопок выбора (важно!)
+    for (let i = 1; i <= 4; i++) {
+        const btn = document.getElementById(`choice${i}`);
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        btn.onclick = null; // будет перезаписано ниже, если режим выбора
+    }
+
     if (currentMode === 1 || currentMode === 3) {
         questionWord.textContent = word.de;
     } else {
@@ -104,6 +110,7 @@ function showQuestion() {
     if (currentMode === 1 || currentMode === 2) {
         inputMode.classList.remove('hidden');
         choiceMode.classList.add('hidden');
+        submitBtn.classList.remove('hidden'); // на всякий случай
     } else {
         inputMode.classList.add('hidden');
         choiceMode.classList.remove('hidden');
@@ -148,7 +155,7 @@ function checkInput() {
     feedback.classList.remove('hidden');
     nextBtn.classList.remove('hidden');
     submitBtn.classList.add('hidden');
-    updateScore();
+    updateScore(); // обновляем счёт каждый раз
 }
 
 function checkChoice(selected, word) {
@@ -164,10 +171,13 @@ function checkChoice(selected, word) {
     }
     feedback.classList.remove('hidden');
     nextBtn.classList.remove('hidden');
-    updateScore();
+    updateScore(); // обновляем счёт каждый раз
+
+    // Отключаем все кнопки выбора, чтобы не кликали несколько раз
     for (let i = 1; i <= 4; i++) {
-        document.getElementById(`choice${i}`).disabled = true;
-        document.getElementById(`choice${i}`).style.opacity = '0.6';
+        const btn = document.getElementById(`choice${i}`);
+        btn.disabled = true;
+        btn.style.opacity = '0.6';
     }
 }
 
@@ -205,5 +215,4 @@ restartMode.addEventListener('click', () => {
     startMode(currentMode);
 });
 
-// Запуск загрузки слов при открытии страницы
 loadWords();
