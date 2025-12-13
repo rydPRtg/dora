@@ -1,11 +1,11 @@
-// script.js
 let words = [];
 let shuffledWords = [];
 let currentIndex = 0;
-let currentMode = 0; // 1: DE->RU input, 2: RU->DE input, 3: DE->RU choice, 4: RU->DE choice
+let currentMode = 0;
 let correct = 0;
 let totalAttempted = 0;
 
+const loading = document.getElementById('loading');
 const modeSelection = document.getElementById('modeSelection');
 const gameContainer = document.getElementById('gameContainer');
 const statsContainer = document.getElementById('statsContainer');
@@ -25,8 +25,12 @@ const score = document.getElementById('score');
 const statsText = document.getElementById('statsText');
 
 async function loadWords() {
+    loading.classList.remove('hidden');
+    modeSelection.classList.add('hidden');
+    
     try {
         const response = await fetch('words.xlsx');
+        if (!response.ok) throw new Error('Файл не найден');
         const arrayBuffer = await response.arrayBuffer();
         const data = new Uint8Array(arrayBuffer);
         const workbook = XLSX.read(data, { type: 'array' });
@@ -34,15 +38,23 @@ async function loadWords() {
         const sheet = workbook.Sheets[sheetName];
         const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-        // Предполагаем, что первая колонка - немецкий, вторая - русский, пропускаем заголовок если есть
-        words = json.slice(1).map(row => ({ de: row[0], ru: row[1] })).filter(row => row.de && row.ru);
+        words = json.slice(1)
+            .map(row => ({ de: String(row[0] || '').trim(), ru: String(row[1] || '').trim() }))
+            .filter(row => row.de && row.ru);
 
         if (words.length === 0) {
-            alert('Нет валидных слов в файле words.xlsx.');
+            alert('В файле words.xlsx нет валидных слов (нужны две колонки: немецкий и русский).');
+            loading.classList.add('hidden');
+            return;
         }
+
+        // После успешной загрузки показываем меню режимов
+        loading.classList.add('hidden');
+        modeSelection.classList.remove('hidden');
     } catch (error) {
-        console.error('Ошибка загрузки файла:', error);
-        alert('Ошибка загрузки файла words.xlsx.');
+        console.error(error);
+        alert('Не удалось загрузить words.xlsx. Проверьте, что файл лежит в корне репозитория и называется точно "words.xlsx".');
+        loading.classList.add('hidden');
     }
 }
 
@@ -55,18 +67,23 @@ function shuffle(array) {
 }
 
 function startMode(mode) {
+    if (words.length === 0) return;
+    
     currentMode = mode;
     shuffledWords = shuffle([...words]);
     currentIndex = 0;
     correct = 0;
     totalAttempted = 0;
     updateScore();
+    
     modeSelection.classList.add('hidden');
     gameContainer.classList.remove('hidden');
     statsContainer.classList.add('hidden');
+    
     showQuestion();
 }
 
+// Остальные функции без изменений (showQuestion, setupChoices, checkInput и т.д.)
 function showQuestion() {
     if (currentIndex >= shuffledWords.length) {
         showStats();
@@ -87,7 +104,6 @@ function showQuestion() {
     if (currentMode === 1 || currentMode === 2) {
         inputMode.classList.remove('hidden');
         choiceMode.classList.add('hidden');
-        submitBtn.classList.remove('hidden');
     } else {
         inputMode.classList.add('hidden');
         choiceMode.classList.remove('hidden');
@@ -101,7 +117,7 @@ function setupChoices(word) {
     const choices = [word];
     while (choices.length < 4) {
         const randomWord = words[Math.floor(Math.random() * words.length)];
-        if (!choices.includes(randomWord)) {
+        if (!choices.find(c => c.de === randomWord.de && c.ru === randomWord.ru)) {
             choices.push(randomWord);
         }
     }
@@ -126,7 +142,7 @@ function checkInput() {
         feedback.textContent = 'Правильно!';
         feedback.className = 'correct';
     } else {
-        feedback.textContent = `Неправильно! Вы ввели: "${userInput.value}". Правильный ответ: "${correctAnswer}".`;
+        feedback.textContent = `Неправильно! Вы ввели: "${userInput.value}". Правильный: "${correctAnswer}".`;
         feedback.className = 'incorrect';
     }
     feedback.classList.remove('hidden');
@@ -143,15 +159,15 @@ function checkChoice(selected, word) {
         feedback.textContent = 'Правильно!';
         feedback.className = 'correct';
     } else {
-        feedback.textContent = `Неправильно! Вы выбрали: "${selected}". Правильный ответ: "${correctAnswer}".`;
+        feedback.textContent = `Неправильно! Выбрано: "${selected}". Правильный: "${correctAnswer}".`;
         feedback.className = 'incorrect';
     }
     feedback.classList.remove('hidden');
     nextBtn.classList.remove('hidden');
     updateScore();
-    // Disable choices
     for (let i = 1; i <= 4; i++) {
-        document.getElementById(`choice${i}`).onclick = null;
+        document.getElementById(`choice${i}`).disabled = true;
+        document.getElementById(`choice${i}`).style.opacity = '0.6';
     }
 }
 
@@ -165,7 +181,7 @@ function updateScore() {
 
 function showStats() {
     const incorrect = totalAttempted - correct;
-    statsText.innerHTML = `Правильно: ${correct}<br>Неправильно: ${incorrect}<br>Всего пройдено: ${totalAttempted}`;
+    statsText.innerHTML = `Правильно: ${correct}<br>Неправильно: ${incorrect}<br>Всего: ${totalAttempted}`;
     gameContainer.classList.add('hidden');
     statsContainer.classList.remove('hidden');
 }
@@ -189,5 +205,5 @@ restartMode.addEventListener('click', () => {
     startMode(currentMode);
 });
 
-// Загрузка слов при старте
+// Запуск загрузки слов при открытии страницы
 loadWords();
