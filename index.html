@@ -1,10 +1,17 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Приложение для изучения немецких слов</title>
+    <meta name="theme-color" content="#007bff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Немецкие слова — карточки</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="icon" sizes="192x192" href="icon-192.png">
+    <link rel="icon" sizes="512x512" href="icon-512.png">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
@@ -23,7 +30,7 @@
                 <p id="questionWord"></p>
             </div>
             <div id="inputMode" class="hidden">
-                <input type="text" id="userInput" placeholder="Введите перевод">
+                <input type="text" id="userInput" placeholder="Введите перевод" autocomplete="off">
                 <button id="submitBtn">Проверить</button>
             </div>
             <div id="choiceMode" class="hidden">
@@ -38,6 +45,35 @@
             <button id="restartBtn" class="hidden">Начать заново</button>
         </div>
     </div>
+
+    <!-- Кнопка установки приложения (появится в браузере) -->
+    <script>
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const installBtn = document.createElement('button');
+            installBtn.textContent = 'Установить приложение';
+            installBtn.style.position = 'fixed';
+            installBtn.style.bottom = '20px';
+            installBtn.style.left = '50%';
+            installBtn.style.transform = 'translateX(-50%)';
+            installBtn.style.padding = '12px 24px';
+            installBtn.style.background = '#28a745';
+            installBtn.style.color = 'white';
+            installBtn.style.border = 'none';
+            installBtn.style.borderRadius = '8px';
+            installBtn.style.fontSize = '1em';
+            installBtn.style.zIndex = '1000';
+            installBtn.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
+            installBtn.onclick = () => {
+                installBtn.remove();
+                deferredPrompt.prompt();
+            };
+            document.body.appendChild(installBtn);
+        });
+    </script>
+
     <script src="script.js"></script>
 </body>
 </html>
