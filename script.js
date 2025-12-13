@@ -3,9 +3,12 @@ let words = [];
 let shuffledWords = [];
 let currentIndex = 0;
 let currentMode = 0; // 1: DE->RU input, 2: RU->DE input, 3: DE->RU choice, 4: RU->DE choice
+let correct = 0;
+let totalAttempted = 0;
 
 const modeSelection = document.getElementById('modeSelection');
 const gameContainer = document.getElementById('gameContainer');
+const statsContainer = document.getElementById('statsContainer');
 const questionWord = document.getElementById('questionWord');
 const inputMode = document.getElementById('inputMode');
 const choiceMode = document.getElementById('choiceMode');
@@ -13,8 +16,13 @@ const userInput = document.getElementById('userInput');
 const submitBtn = document.getElementById('submitBtn');
 const feedback = document.getElementById('feedback');
 const nextBtn = document.getElementById('nextBtn');
-const restartBtn = document.getElementById('restartBtn');
+const homeBtn = document.getElementById('homeBtn');
+const finishBtn = document.getElementById('finishBtn');
+const toMenu = document.getElementById('toMenu');
+const restartMode = document.getElementById('restartMode');
 const progress = document.getElementById('progress');
+const score = document.getElementById('score');
+const statsText = document.getElementById('statsText');
 
 async function loadWords() {
     try {
@@ -50,17 +58,18 @@ function startMode(mode) {
     currentMode = mode;
     shuffledWords = shuffle([...words]);
     currentIndex = 0;
+    correct = 0;
+    totalAttempted = 0;
+    updateScore();
     modeSelection.classList.add('hidden');
     gameContainer.classList.remove('hidden');
+    statsContainer.classList.add('hidden');
     showQuestion();
 }
 
 function showQuestion() {
     if (currentIndex >= shuffledWords.length) {
-        feedback.textContent = 'Игра завершена!';
-        feedback.classList.remove('hidden', 'correct', 'incorrect');
-        nextBtn.classList.add('hidden');
-        restartBtn.classList.remove('hidden');
+        showStats();
         return;
     }
 
@@ -107,35 +116,39 @@ function setupChoices(word) {
 
 function checkInput() {
     const word = shuffledWords[currentIndex];
-    const correct = (currentMode === 1) ? word.ru : word.de;
+    const correctAnswer = (currentMode === 1) ? word.ru : word.de;
     const userAnswer = userInput.value.trim().toLowerCase();
-    const correctLower = correct.toLowerCase();
+    const correctLower = correctAnswer.toLowerCase();
 
+    totalAttempted++;
     if (userAnswer === correctLower) {
-        feedback.textContent = 'Правильно!';
-        feedback.className = 'correct';
-        nextBtn.classList.remove('hidden');
-        submitBtn.classList.add('hidden');
-    } else {
-        feedback.textContent = `Неправильно! Вы ввели: "${userInput.value}". Правильный ответ: "${correct}".`;
-        feedback.className = 'incorrect';
-        nextBtn.classList.remove('hidden');
-        submitBtn.classList.add('hidden');
-    }
-    feedback.classList.remove('hidden');
-}
-
-function checkChoice(selected, word) {
-    const correct = (currentMode === 3) ? word.ru : word.de;
-    if (selected.toLowerCase() === correct.toLowerCase()) {
+        correct++;
         feedback.textContent = 'Правильно!';
         feedback.className = 'correct';
     } else {
-        feedback.textContent = `Неправильно! Вы выбрали: "${selected}". Правильный ответ: "${correct}".`;
+        feedback.textContent = `Неправильно! Вы ввели: "${userInput.value}". Правильный ответ: "${correctAnswer}".`;
         feedback.className = 'incorrect';
     }
     feedback.classList.remove('hidden');
     nextBtn.classList.remove('hidden');
+    submitBtn.classList.add('hidden');
+    updateScore();
+}
+
+function checkChoice(selected, word) {
+    const correctAnswer = (currentMode === 3) ? word.ru : word.de;
+    totalAttempted++;
+    if (selected.toLowerCase() === correctAnswer.toLowerCase()) {
+        correct++;
+        feedback.textContent = 'Правильно!';
+        feedback.className = 'correct';
+    } else {
+        feedback.textContent = `Неправильно! Вы выбрали: "${selected}". Правильный ответ: "${correctAnswer}".`;
+        feedback.className = 'incorrect';
+    }
+    feedback.classList.remove('hidden');
+    nextBtn.classList.remove('hidden');
+    updateScore();
     // Disable choices
     for (let i = 1; i <= 4; i++) {
         document.getElementById(`choice${i}`).onclick = null;
@@ -146,15 +159,34 @@ function updateProgress() {
     progress.textContent = `Карточка ${currentIndex + 1} из ${shuffledWords.length}`;
 }
 
+function updateScore() {
+    score.textContent = `Правильно: ${correct}`;
+}
+
+function showStats() {
+    const incorrect = totalAttempted - correct;
+    statsText.innerHTML = `Правильно: ${correct}<br>Неправильно: ${incorrect}<br>Всего пройдено: ${totalAttempted}`;
+    gameContainer.classList.add('hidden');
+    statsContainer.classList.remove('hidden');
+}
+
 submitBtn.addEventListener('click', checkInput);
 nextBtn.addEventListener('click', () => {
     currentIndex++;
     showQuestion();
 });
-restartBtn.addEventListener('click', () => {
+homeBtn.addEventListener('click', () => {
     gameContainer.classList.add('hidden');
     modeSelection.classList.remove('hidden');
-    restartBtn.classList.add('hidden');
+});
+finishBtn.addEventListener('click', showStats);
+toMenu.addEventListener('click', () => {
+    statsContainer.classList.add('hidden');
+    modeSelection.classList.remove('hidden');
+});
+restartMode.addEventListener('click', () => {
+    statsContainer.classList.add('hidden');
+    startMode(currentMode);
 });
 
 // Загрузка слов при старте
