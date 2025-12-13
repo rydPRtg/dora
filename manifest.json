@@ -2,7 +2,7 @@
   "name": "Немецкие слова — карточки",
   "short_name": "Deutsch Cards",
   "description": "Приложение для изучения немецких слов по карточкам",
-  "start_url": "/index.html",
+  "start_url": ".",
   "display": "fullscreen",
   "background_color": "#f0f0f0",
   "theme_color": "#007bff",
