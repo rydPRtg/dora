@@ -1,32 +1,41 @@
 <!-- index.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>German Flashcards App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Приложение для изучения немецких слов</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>German Flashcards</h1>
-        <input type="file" id="fileInput" accept=".xlsx">
-        <div id="cardContainer" class="hidden">
-            <div class="card" id="card">
-                <div class="card-front">
-                    <p id="germanWord"></p>
-                </div>
-                <div class="card-back">
-                    <p id="russianTranslation"></p>
-                </div>
+        <h1>Изучение немецких слов</h1>
+        <div id="modeSelection">
+            <p>Выберите режим:</p>
+            <button onclick="startMode(1)">Ввод: Немецкий → Русский</button>
+            <button onclick="startMode(2)">Ввод: Русский → Немецкий</button>
+            <button onclick="startMode(3)">Выбор: Немецкий → Русский</button>
+            <button onclick="startMode(4)">Выбор: Русский → Немецкий</button>
+        </div>
+        <div id="gameContainer" class="hidden">
+            <div id="questionContainer">
+                <p id="questionWord"></p>
             </div>
-            <div class="controls">
-                <button id="prevBtn">Previous</button>
-                <button id="flipBtn">Flip</button>
-                <button id="nextBtn">Next</button>
+            <div id="inputMode" class="hidden">
+                <input type="text" id="userInput" placeholder="Введите перевод">
+                <button id="submitBtn">Проверить</button>
             </div>
-            <p id="progress">Card 1 of 0</p>
+            <div id="choiceMode" class="hidden">
+                <button class="choiceBtn" id="choice1"></button>
+                <button class="choiceBtn" id="choice2"></button>
+                <button class="choiceBtn" id="choice3"></button>
+                <button class="choiceBtn" id="choice4"></button>
+            </div>
+            <div id="feedback" class="hidden"></div>
+            <p id="progress">Карточка 1 из 0</p>
+            <button id="nextBtn" class="hidden">Далее</button>
+            <button id="restartBtn" class="hidden">Начать заново</button>
         </div>
     </div>
     <script src="script.js"></script>
