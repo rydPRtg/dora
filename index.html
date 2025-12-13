@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -26,6 +27,7 @@
             <button onclick="startMode(4)">Выбор: Русский → Немецкий</button>
         </div>
         <div id="gameContainer" class="hidden">
+            <p id="score">Правильно: 0</p>
             <div id="questionContainer">
                 <p id="questionWord"></p>
             </div>
@@ -42,7 +44,16 @@
             <div id="feedback" class="hidden"></div>
             <p id="progress">Карточка 1 из 0</p>
             <button id="nextBtn" class="hidden">Далее</button>
-            <button id="restartBtn" class="hidden">Начать заново</button>
+            <div class="bottom-controls">
+                <button id="homeBtn">Главная</button>
+                <button id="finishBtn">Закончить</button>
+            </div>
+        </div>
+        <div id="statsContainer" class="hidden">
+            <h2>Результаты</h2>
+            <p id="statsText"></p>
+            <button id="toMenu">Главное меню</button>
+            <button id="restartMode">Начать сначала</button>
         </div>
     </div>
 
