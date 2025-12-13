@@ -9,6 +9,7 @@ body {
     margin: 0;
     padding: 10px;
     box-sizing: border-box;
+    touch-action: manipulation; /* Помогает предотвратить зум на touch устройствах */
 }
 
 .container {
@@ -26,66 +27,11 @@ h1 {
     margin-bottom: 20px;
 }
 
-#fileInput {
-    margin-bottom: 20px;
-}
-
-.hidden {
-    display: none;
-}
-
-.card {
-    perspective: 1000px;
+#modeSelection button {
+    display: block;
     width: 100%;
-    height: 200px;
-    margin-bottom: 20px;
-    cursor: pointer;
-}
-
-.card-front, .card-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background: #fff;
-    transition: transform 0.6s;
-    transform-style: preserve-3d;
-}
-
-.card-front {
-    transform: rotateY(0deg);
-}
-
-.card-back {
-    transform: rotateY(180deg);
-}
-
-.card.flipped .card-front {
-    transform: rotateY(180deg);
-}
-
-.card.flipped .card-back {
-    transform: rotateY(0deg);
-}
-
-p {
-    font-size: 1.2em;
+    margin: 10px 0;
     padding: 10px;
-}
-
-.controls {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-button {
-    padding: 10px 20px;
     background: #007bff;
     color: white;
     border: none;
@@ -93,13 +39,86 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+#modeSelection button:hover {
     background: #0056b3;
+}
+
+.hidden {
+    display: none;
+}
+
+#questionContainer {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    animation: fadeIn 0.5s;
+}
+
+#userInput {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#submitBtn, #nextBtn, #restartBtn {
+    padding: 10px 20px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#submitBtn:hover, #nextBtn:hover, #restartBtn:hover {
+    background: #218838;
+}
+
+.choiceBtn {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.choiceBtn:hover {
+    background: #0056b3;
+}
+
+#feedback {
+    margin: 20px 0;
+    padding: 10px;
+    border-radius: 5px;
+    animation: fadeIn 0.5s;
+}
+
+.correct {
+    background: #d4edda;
+    color: #155724;
+}
+
+.incorrect {
+    background: #f8d7da;
+    color: #721c24;
 }
 
 #progress {
     font-size: 0.9em;
     color: #666;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 /* Mobile optimizations */
@@ -110,7 +129,7 @@ button:hover {
     h1 {
         font-size: 1.2em;
     }
-    p {
+    #questionContainer {
         font-size: 1em;
     }
     button {
